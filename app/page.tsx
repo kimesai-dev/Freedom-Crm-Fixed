@@ -2,7 +2,6 @@
 // Final save trigger to ensure deploy
 // temp touch to trigger commit
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 
 type Lead = {
   id: string;
