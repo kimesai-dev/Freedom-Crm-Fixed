@@ -1,3 +1,4 @@
+// Final save trigger to ensure deploy
 // temp touch to trigger commit
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +10,9 @@ type Lead = {
   location: string;
   motivation: string;
   price: string;
+  link?: string; // ✅ optional, so it doesn’t break if undefined
 };
+
 
 const BASE_URL = "https://freedom-backend-production.up.railway.app";
 
@@ -47,16 +50,27 @@ export default async function LeadsPage() {
             <CardContent className="p-4 space-y-2">
               <div className="flex justify-between items-center">
                 <h2 className="text-xl font-semibold">{lead.title}</h2>
-                <Badge>{lead.motivation}</Badge>
+                <Badge>{lead.motivation || "Unknown"}</Badge>
               </div>
               <p className="text-sm text-gray-600">{lead.description}</p>
               <p className="text-sm text-gray-500">📍 {lead.location}</p>
               <p className="text-sm font-medium text-green-700">💰 {lead.price}</p>
+              {lead.link && (
+                <a
+                  href={lead.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block mt-2 text-sm text-blue-600 hover:underline"
+                >
+                  🔗 View Listing
+                </a>
+              )}
             </CardContent>
           </Card>
         ))}
       </div>
     </div>
   );
+  
 }
  
