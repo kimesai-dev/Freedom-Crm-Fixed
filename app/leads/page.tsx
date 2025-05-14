@@ -10,7 +10,7 @@ type Lead = {
   price: string;
 };
 
-const BASE_URL = 'https://freedom-crm-fixed-production.up.railway.app';
+const BASE_URL = 'https://freedom-backend-production.up.railway.app';
 
 async function getLeads(): Promise<Lead[]> {
   const res = await fetch(`${BASE_URL}/api/leads/import`, { cache: "no-store" });
