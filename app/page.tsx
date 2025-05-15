@@ -1,7 +1,7 @@
-// ✅ FINAL UI SYNC — force Vercel redeploy for full styling
+// ✅ useEffect-based fetch working
 'use client'
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 
 type Lead = {
@@ -17,27 +17,30 @@ type Lead = {
 
 const BASE_URL = "https://freedom-backend-production.up.railway.app"
 
-async function getLeads(): Promise<Lead[]> {
-  try {
-    const res = await fetch(`${BASE_URL}/api/leads/import`, { cache: "no-store" })
-    const data = await res.json()
-    return Array.isArray(data) ? data : []
-  } catch (err) {
-    console.error("❌ Error fetching leads:", err)
-    return []
-  }
-}
-
 export default function LeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([])
   const [loading, setLoading] = useState(true)
+  const [expanded, setExpanded] = useState<{ [id: string]: boolean }>({})
 
-  useState(() => {
-    getLeads().then((data) => {
-      setLeads(data)
-      setLoading(false)
-    })
-  })
+  useEffect(() => {
+    const fetchLeads = async () => {
+      try {
+        const res = await fetch(`${BASE_URL}/api/leads/import`, { cache: "no-store" })
+        const data = await res.json()
+        setLeads(Array.isArray(data) ? data : [])
+      } catch (err) {
+        console.error("❌ Error fetching leads:", err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchLeads()
+  }, [])
+
+  const toggleSummary = (id: string) => {
+    setExpanded((prev) => ({ ...prev, [id]: !prev[id] }))
+  }
 
   if (loading) {
     return (
@@ -58,8 +61,6 @@ export default function LeadsPage() {
             motivation >= 5 ? "bg-yellow-100 text-yellow-800" :
             "bg-red-100 text-red-800"
 
-          const [showSummary, setShowSummary] = useState(false)
-
           return (
             <Card key={lead.id} className="rounded-xl shadow-md hover:shadow-lg transition">
               <CardContent className="p-5 space-y-3">
@@ -78,12 +79,12 @@ export default function LeadsPage() {
                 {lead.summary && (
                   <div className="text-xs text-gray-700 border-t pt-2">
                     <button
-                      onClick={() => setShowSummary(!showSummary)}
+                      onClick={() => toggleSummary(lead.id)}
                       className="text-blue-600 hover:underline text-xs mb-1"
                     >
-                      {showSummary ? "Hide Summary" : "Show Summary"}
+                      {expanded[lead.id] ? "Hide Summary" : "Show Summary"}
                     </button>
-                    {showSummary && (
+                    {expanded[lead.id] && (
                       <p className="whitespace-pre-line">{lead.summary}</p>
                     )}
                   </div>
