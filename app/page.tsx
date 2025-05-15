@@ -1,4 +1,4 @@
-// ✅ useEffect-based fetch working
+// ✅ Vercel force deploy — remove stuck M
 'use client'
 
 import { useEffect, useState } from "react"
@@ -51,8 +51,8 @@ export default function LeadsPage() {
   }
 
   return (
-    <div className="space-y-8 py-10 px-4 sm:px-8">
-      <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-4">Leads Dashboard</h1>
+    <div className="min-h-screen bg-gray-100 py-10 px-4 sm:px-8">
+      <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-6">🔥 Leads Dashboard</h1>
       <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
         {leads.map((lead) => {
           const motivation = parseInt(lead.motivation) || 0
@@ -62,7 +62,7 @@ export default function LeadsPage() {
             "bg-red-100 text-red-800"
 
           return (
-            <Card key={lead.id} className="rounded-xl shadow-md hover:shadow-lg transition">
+            <Card key={lead.id} className="rounded-xl bg-white shadow-lg border border-gray-200 transition">
               <CardContent className="p-5 space-y-3">
                 <div className="flex justify-between items-center">
                   <h2 className="text-lg font-semibold">{lead.title || "Untitled Lead"}</h2>
@@ -85,7 +85,9 @@ export default function LeadsPage() {
                       {expanded[lead.id] ? "Hide Summary" : "Show Summary"}
                     </button>
                     {expanded[lead.id] && (
-                      <p className="whitespace-pre-line">{lead.summary}</p>
+                      <p className="whitespace-pre-line text-gray-700 mt-2 text-sm leading-snug">
+                        {lead.summary}
+                      </p>
                     )}
                   </div>
                 )}
